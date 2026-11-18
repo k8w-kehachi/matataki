@@ -844,15 +844,13 @@
         });
     }
 
-    function openPlayerModal(playerName) {
+function openPlayerModal(playerName) {
         const playerRecords = recordsData.filter(rec => rec.player === playerName);
         let totalPts = 0;
         let recordsHtml = '';
 
         // プレイヤーのプロフィールバッジ条件判定用
         let hasAnyWr = false;
-        let hasUtTop10 = false;
-        let hasUtTop1 = false;
 
         playerRecords.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
@@ -860,20 +858,11 @@
 
             if (rec.rank === 1) hasAnyWr = true;
 
-            // 該当コースのメタデータを取得
-            const cMeta = courseMetaList.find(c => c.name === rec.course);
-            if (cMeta && cMeta.tier === "ULTRATIGHT") {
-                hasUtTop10 = true;
-                if (rec.rank === 1) {
-                    hasUtTop1 = true;
-                }
-            }
-
             const crown = rec.rank === 1 ? '👑 ' : '';
             recordsHtml += `<li><strong>${crown}${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
         });
 
-        // 総合順位バッジの判定
+        // 総合順位・条件バッジの判定
         const { rankedPlayers } = getPlayerStats();
         const foundPlayerRank = rankedPlayers.find(p => p.player === playerName);
         let overallBadgeHtml = '';
@@ -889,11 +878,10 @@
             }
         }
 
-        // 追加バッジのHTML組み立て
+        // 追加バッジのHTML組み立て（Ultra Tight関連を削除、1000pt以上のマスタバッジを追加）
         let badgesHtml = '';
-        if (hasUtTop1) badgesHtml += `<span class="p-badge p-badge-ut-top1">🔥 Ultra Tight TOP1</span>`;
-        if (hasUtTop10) badgesHtml += `<span class="p-badge p-badge-ut-top10">🔥 Ultra Tight TOP10</span>`;
         if (hasAnyWr) badgesHtml += `<span class="p-badge p-badge-top1">👑 TOP1</span>`;
+        if (totalPts >= 1000) badgesHtml += `<span class="p-badge p-badge-ut-top1" style="background: rgba(186, 85, 211, 0.2); color: #da70d6; border-color: #da70d6;">✨ matataki Master</span>`;
         badgesHtml += overallBadgeHtml;
 
         const modalBody = document.getElementById('modal-body');
@@ -915,10 +903,6 @@
         `;
 
         document.getElementById('player-modal').style.display = 'flex';
-    }
-
-    function closeModalDirect() {
-        document.getElementById('player-modal').style.display = 'none';
     }
 
     initApp();
