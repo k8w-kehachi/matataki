@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chelcy Network - Matataki Rate Ranking</title>
+    <title>Chelcy Network - Matataki Point Ranking</title>
     <style>
         :root {
             --bg-color: #0b0c10;
@@ -51,18 +51,19 @@
         .nav-tabs {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 28px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             background-color: var(--card-bg);
             color: var(--text-sub);
             border: 1px solid var(--border-color);
-            padding: 11px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
         }
         .tab-btn:hover {
@@ -211,7 +212,19 @@
         .badge-tight { background-color: rgba(255, 71, 87, 0.2); color: #ff6b81; border: 1px solid #ff4757; }
         .badge-competitive { background-color: rgba(255, 165, 2, 0.2); color: #ffc048; border: 1px solid #ffa502; }
         .badge-open { background-color: rgba(46, 213, 115, 0.2); color: #7bed9f; border: 1px solid #2ed573; }
-        .badge-nodata { background-color: rgba(148, 153, 176, 0.15); color: #9499b0; border: 1px solid #4a5068; }
+        
+        .wr-badge {
+            background-color: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
 
         /* コース詳細ヘッダー */
         .course-detail-header {
@@ -242,7 +255,7 @@
             text-align: left;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 13px 15px;
             border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
         }
@@ -256,15 +269,30 @@
             background-color: rgba(255,255,255,0.04);
             cursor: pointer;
         }
+
+        /* 1〜3位の特別強調行 */
+        tr.podium-1 td {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.12) 0%, rgba(21, 23, 34, 0) 70%);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+        }
+        tr.podium-2 td {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.1) 0%, rgba(21, 23, 34, 0) 70%);
+            border-bottom: 1px solid rgba(192, 192, 192, 0.2);
+        }
+        tr.podium-3 td {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.1) 0%, rgba(21, 23, 34, 0) 70%);
+            border-bottom: 1px solid rgba(205, 127, 50, 0.2);
+        }
+
         .player-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .mc-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
             background-color: #111;
         }
         .mc-avatar-sm {
@@ -273,9 +301,21 @@
             border-radius: 3px;
             background-color: #111;
         }
-        .rank-1 { color: #ffd700; font-weight: bold; }
-        .rank-2 { color: #c0c0c0; font-weight: bold; }
-        .rank-3 { color: #cd7f32; font-weight: bold; }
+        
+        .rank-badge-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .rank-1 { background-color: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
+        .rank-2 { background-color: rgba(192, 192, 192, 0.2); color: #c0c0c0; border: 1px solid #c0c0c0; }
+        .rank-3 { background-color: rgba(205, 127, 50, 0.2); color: #cd7f32; border: 1px solid #cd7f32; }
+        .rank-other { color: var(--text-sub); padding-left: 6px; }
 
         #loading-msg {
             text-align: center;
@@ -319,28 +359,30 @@
 
 <div class="container">
     <header>
-        <h1>Chelcy Network : Matataki Rate</h1>
-        <p>Minecraft Java Athletic - 瞬（matataki） Rate Ranking System</p>
+        <h1>Chelcy Network : Matataki Point</h1>
+        <p>Minecraft Java Athletic - 瞬（matataki） Point Ranking System</p>
     </header>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('ranking', this)">総合レートランキング</button>
+        <button class="tab-btn active" onclick="switchTab('ranking', this)">総合ポイントランキング</button>
+        <button class="tab-btn" onclick="switchTab('wr-ranking', this)">1位獲得数ランキング</button>
         <button class="tab-btn" onclick="switchTab('courses', this)">コース一覧 & TOP10</button>
     </div>
 
     <div id="loading-msg">スプレッドシートからデータを読み込み中...</div>
 
-    <!-- 総合ランキング画面 -->
+    <!-- 総合ポイントランキング画面 -->
     <div id="ranking" class="section active" style="display:none;">
         <div class="card">
-            <h2 style="margin-top:0;">総合レートランキング</h2>
+            <h2 style="margin-top:0;">総合ポイントランキング</h2>
             <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">プレイヤー名をクリックすると詳細データが表示されます</p>
             <table>
                 <thead>
                     <tr>
-                        <th>順位</th>
+                        <th style="width: 80px;">順位</th>
                         <th>プレイヤー名</th>
-                        <th>総合レート</th>
+                        <th style="width: 130px; text-align:center;">1位獲得数</th>
+                        <th style="text-align:right;">総合ポイント</th>
                     </tr>
                 </thead>
                 <tbody id="ranking-tbody"></tbody>
@@ -348,9 +390,26 @@
         </div>
     </div>
 
+    <!-- 1位獲得数ランキング画面 -->
+    <div id="wr-ranking" class="section" style="display:none;">
+        <div class="card">
+            <h2 style="margin-top:0;">1位獲得数ランキング</h2>
+            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">全コースの中で「1位（WR）」を獲得した回数のランキングです</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">順位</th>
+                        <th>プレイヤー名</th>
+                        <th style="text-align:right; padding-right:20px;">1位獲得数</th>
+                    </tr>
+                </thead>
+                <tbody id="wr-ranking-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- コース一覧 & TOP10画面 -->
     <div id="courses" class="section">
-        <!-- 全コースグリッドカード -->
         <div class="card">
             <div class="filter-bar">
                 <h2 style="margin:0; font-size:1.15rem;">コース一覧（クリックでTOP10表示）</h2>
@@ -364,7 +423,6 @@
             <div id="course-grid" class="course-grid"></div>
         </div>
 
-        <!-- 選択されたコースのTOP10詳細 -->
         <div class="card" id="course-detail-card">
             <div class="course-detail-header">
                 <div class="course-detail-title">
@@ -376,10 +434,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>順位</th>
+                        <th style="width: 80px;">順位</th>
                         <th>プレイヤー名</th>
                         <th>タイム</th>
-                        <th>獲得ポイント</th>
+                        <th style="text-align:right;">獲得ポイント</th>
                     </tr>
                 </thead>
                 <tbody id="course-tbody"></tbody>
@@ -405,7 +463,7 @@
 
     let pointsMap = {};
     let recordsData = [];
-    let courseMetaList = []; // コースごとの集計情報（WRや難易度など）
+    let courseMetaList = []; 
     let currentSelectedCourse = "";
     let currentFilter = "ALL";
 
@@ -435,7 +493,6 @@
             const recText = await recRes.text();
             const ptsText = await ptsRes.text();
 
-            // Pointsの変換
             const rawPoints = parseCSV(ptsText);
             rawPoints.forEach(row => {
                 const r = parseInt(row.rank, 10);
@@ -445,7 +502,6 @@
                 }
             });
 
-            // Recordsの変換
             const rawRecords = parseCSV(recText);
             recordsData = rawRecords.map(row => {
                 const cleanTime = parseFloat(String(row.time).replace(/[^0-9.]/g, ''));
@@ -457,17 +513,16 @@
                 };
             }).filter(r => r.course && !isNaN(r.rank) && r.player && r.time > 0);
 
-            // コースごとの統計・難易度メタデータを事前計算
             buildCourseMeta();
 
             if (courseMetaList.length > 0) {
                 currentSelectedCourse = courseMetaList[0].name;
             }
 
-            // 画面描画
             document.getElementById('loading-msg').style.display = 'none';
             document.getElementById('ranking').style.display = 'block';
             renderOverallRanking();
+            renderWrRanking();
             renderCourseGrid();
             renderCourseDetail(currentSelectedCourse);
 
@@ -478,7 +533,6 @@
         }
     }
 
-    // コースごとのWR・難易度・タイム差を計算してまとめる
     function buildCourseMeta() {
         const courseNames = [...new Set(recordsData.map(r => r.course))];
         courseMetaList = courseNames.map(name => {
@@ -528,39 +582,119 @@
         btnEl.classList.add('active');
     }
 
-    function renderOverallRanking() {
+    // プレイヤーごとの集計データ（ポイント・1位獲得数）を計算
+    function getPlayerStats() {
         const playerScores = {};
+        const playerWrCounts = {};
+
         recordsData.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
             if (!playerScores[rec.player]) playerScores[rec.player] = 0;
             playerScores[rec.player] += pts;
+
+            if (rec.rank === 1) {
+                if (!playerWrCounts[rec.player]) playerWrCounts[rec.player] = 0;
+                playerWrCounts[rec.player] += 1;
+            }
         });
 
+        return { playerScores, playerWrCounts };
+    }
+
+    function renderOverallRanking() {
+        const { playerScores, playerWrCounts } = getPlayerStats();
         const sortedPlayers = Object.entries(playerScores).sort((a, b) => b[1] - a[1]);
         const tbody = document.getElementById('ranking-tbody');
         tbody.innerHTML = '';
 
         sortedPlayers.forEach(([player, score], index) => {
             const rank = index + 1;
-            const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-            const avatarUrl = `https://mc-heads.net/avatar/${player}/28`;
+            let rowClass = '';
+            let badgeClass = 'rank-other';
+            let rankDisplay = `${rank}`;
+
+            if (rank === 1) {
+                rowClass = 'podium-1';
+                badgeClass = 'rank-1';
+                rankDisplay = '👑 1';
+            } else if (rank === 2) {
+                rowClass = 'podium-2';
+                badgeClass = 'rank-2';
+                rankDisplay = '🥈 2';
+            } else if (rank === 3) {
+                rowClass = 'podium-3';
+                badgeClass = 'rank-3';
+                rankDisplay = '🥉 3';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
+            const wrCount = playerWrCounts[player] || 0;
+            const wrBadgeHtml = wrCount > 0 ? `<span class="wr-badge">👑 ${wrCount}回</span>` : `<span style="color:var(--text-sub); font-size:0.8rem;">-</span>`;
 
             tbody.innerHTML += `
-                <tr class="player-row" onclick="openPlayerModal('${player}')">
-                    <td class="${rankClass}">${rank}位</td>
+                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${player}')">
+                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
                     <td>
                         <div class="player-info">
                             <img src="${avatarUrl}" class="mc-avatar" alt="${player}">
                             <strong>${player}</strong>
                         </div>
                     </td>
-                    <td>${score} pt</td>
+                    <td style="text-align:center;">${wrBadgeHtml}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--accent-color);">${score.toLocaleString()} pt</td>
                 </tr>
             `;
         });
     }
 
-    // フィルター切り替え
+    function renderWrRanking() {
+        const { playerWrCounts } = getPlayerStats();
+        const sortedWr = Object.entries(playerWrCounts).sort((a, b) => b[1] - a[1]);
+        const tbody = document.getElementById('wr-ranking-tbody');
+        tbody.innerHTML = '';
+
+        if (sortedWr.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-sub);">1位のデータがまだありません</td></tr>`;
+            return;
+        }
+
+        sortedWr.forEach(([player, count], index) => {
+            const rank = index + 1;
+            let rowClass = '';
+            let badgeClass = 'rank-other';
+            let rankDisplay = `${rank}`;
+
+            if (rank === 1) {
+                rowClass = 'podium-1';
+                badgeClass = 'rank-1';
+                rankDisplay = '👑 1';
+            } else if (rank === 2) {
+                rowClass = 'podium-2';
+                badgeClass = 'rank-2';
+                rankDisplay = '🥈 2';
+            } else if (rank === 3) {
+                rowClass = 'podium-3';
+                badgeClass = 'rank-3';
+                rankDisplay = '🥉 3';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
+
+            tbody.innerHTML += `
+                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${player}')">
+                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
+                    <td>
+                        <div class="player-info">
+                            <img src="${avatarUrl}" class="mc-avatar" alt="${player}">
+                            <strong>${player}</strong>
+                        </div>
+                    </td>
+                    <td style="text-align:right; padding-right:20px; font-weight:bold; color:#ffd700; font-size:1.05rem;">👑 ${count} 回</td>
+                </tr>
+            `;
+        });
+    }
+
     function setCourseFilter(filterType, btnEl) {
         currentFilter = filterType;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -568,7 +702,6 @@
         renderCourseGrid();
     }
 
-    // 全コースグリッドカードを描画
     function renderCourseGrid() {
         const grid = document.getElementById('course-grid');
         grid.innerHTML = '';
@@ -609,14 +742,12 @@
         });
     }
 
-    // カードクリック時の処理
     function selectCourse(courseName) {
         currentSelectedCourse = courseName;
         renderCourseGrid();
         renderCourseDetail(courseName);
     }
 
-    // 選択されたコースのTOP10テーブルを描画
     function renderCourseDetail(courseName) {
         const meta = courseMetaList.find(c => c.name === courseName);
         const titleEl = document.getElementById('selected-course-name');
@@ -639,12 +770,29 @@
 
         meta.records.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
-            const rankClass = rec.rank === 1 ? 'rank-1' : rec.rank === 2 ? 'rank-2' : rec.rank === 3 ? 'rank-3' : '';
-            const avatarUrl = `https://mc-heads.net/avatar/${rec.player}/28`;
+            let rowClass = '';
+            let badgeClass = 'rank-other';
+            let rankDisplay = `${rec.rank}位`;
+
+            if (rec.rank === 1) {
+                rowClass = 'podium-1';
+                badgeClass = 'rank-1';
+                rankDisplay = '👑 1位';
+            } else if (rec.rank === 2) {
+                rowClass = 'podium-2';
+                badgeClass = 'rank-2';
+                rankDisplay = '🥈 2位';
+            } else if (rec.rank === 3) {
+                rowClass = 'podium-3';
+                badgeClass = 'rank-3';
+                rankDisplay = '🥉 3位';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${rec.player}/30`;
 
             tbody.innerHTML += `
-                <tr class="player-row" onclick="openPlayerModal('${rec.player}')">
-                    <td class="${rankClass}">${rec.rank}位</td>
+                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${rec.player}')">
+                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
                     <td>
                         <div class="player-info">
                             <img src="${avatarUrl}" class="mc-avatar" alt="${rec.player}">
@@ -652,7 +800,7 @@
                         </div>
                     </td>
                     <td style="font-family:monospace; font-size:0.95rem;">${rec.time.toFixed(3)}秒</td>
-                    <td>+${pts} pt</td>
+                    <td style="text-align:right; font-weight:bold;">+${pts} pt</td>
                 </tr>
             `;
         });
@@ -666,7 +814,8 @@
         playerRecords.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
             totalPts += pts;
-            recordsHtml += `<li><strong>${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
+            const crown = rec.rank === 1 ? '👑 ' : '';
+            recordsHtml += `<li><strong>${crown}${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
         });
 
         const modalBody = document.getElementById('modal-body');
@@ -675,7 +824,7 @@
                 <img src="https://mc-heads.net/avatar/${playerName}/64" style="width: 54px; height: 54px; border-radius: 8px; background:#111;" alt="${playerName}">
                 <div>
                     <h2 style="margin: 0; color: var(--accent-color);">${playerName}</h2>
-                    <p style="margin: 5px 0 0 0; color: var(--text-sub);">総合レート: <strong>${totalPts} pt</strong></p>
+                    <p style="margin: 5px 0 0 0; color: var(--text-sub);">総合ポイント: <strong>${totalPts} pt</strong></p>
                 </div>
             </div>
             <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">記録一覧</h3>
