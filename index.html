@@ -657,7 +657,17 @@
 
             let rowClass = '';
             let badgeClass = 'rank-other';
-            let rankDisplay = `${rank}`;  if (rank === 1) { rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1'; } else if (rank === 2) { rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2'; } else if (rank === 3) { rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3'; }  const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
+            let rankDisplay = `${rank}`;
+
+            if (rank === 1) {
+                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1';
+            } else if (rank === 2) {
+                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2';
+            } else if (rank === 3) {
+                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
             const wrCount = playerWrCounts[player] || 0;
             const wrBadgeHtml = wrCount > 0 ? `<span class="wr-badge">👑 ${wrCount}回</span>` : `<span style="color:var(--text-sub); font-size:0.8rem;">-</span>`;
 
@@ -697,7 +707,17 @@
 
             let rowClass = '';
             let badgeClass = 'rank-other';
-            let rankDisplay = `${currentRank}`;  if (currentRank === 1) { rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1'; } else if (currentRank === 2) { rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2'; } else if (currentRank === 3) { rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3'; }  const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
+            let rankDisplay = `${currentRank}`;
+
+            if (currentRank === 1) {
+                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1';
+            } else if (currentRank === 2) {
+                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2';
+            } else if (currentRank === 3) {
+                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
 
             tbody.innerHTML += `
                 <tr class="player-row ${rowClass}" onclick="openPlayerModal('${player}')">
@@ -789,4 +809,120 @@
         }
 
         titleEl.textContent = meta.name;
-        badgeContainer.innerHTML = `<span class="badge ${meta.badgeClass}">${meta.label
+        badgeContainer.innerHTML = `<span class="badge ${meta.badgeClass}">${meta.label}</span>`;
+        diffInfoEl.textContent = `1位と最下位のタイム差: ${meta.diffRatio.toFixed(1)}%`;
+
+        meta.records.forEach(rec => {
+            const pts = pointsMap[rec.rank] || 0;
+            let rowClass = '';
+            let badgeClass = 'rank-other';
+            let rankDisplay = `${rec.rank}位`;
+
+            if (rec.rank === 1) {
+                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1位';
+            } else if (rec.rank === 2) {
+                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2位';
+            } else if (rec.rank === 3) {
+                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3位';
+            }
+
+            const avatarUrl = `https://mc-heads.net/avatar/${rec.player}/30`;
+
+            tbody.innerHTML += `
+                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${rec.player}')">
+                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
+                    <td>
+                        <div class="player-info">
+                            <img src="${avatarUrl}" class="mc-avatar" alt="${rec.player}">
+                            <span>${rec.player}</span>
+                        </div>
+                    </td>
+                    <td style="font-family:monospace; font-size:0.95rem;">${rec.time.toFixed(3)}秒</td>
+                    <td style="text-align:right; font-weight:bold;">+${pts} pt</td>
+                </tr>
+            `;
+        });
+    }
+
+    function openPlayerModal(playerName) {
+        const playerRecords = recordsData.filter(rec => rec.player === playerName);
+        let totalPts = 0;
+        let recordsHtml = '';
+
+        // プレイヤーのプロフィールバッジ条件判定用
+        let hasAnyWr = false;
+        let hasUtTop10 = false;
+        let hasUtTop1 = false;
+
+        playerRecords.forEach(rec => {
+            const pts = pointsMap[rec.rank] || 0;
+            totalPts += pts;
+
+            if (rec.rank === 1) hasAnyWr = true;
+
+            // 該当コースのメタデータを取得
+            const cMeta = courseMetaList.find(c => c.name === rec.course);
+            if (cMeta && cMeta.tier === "ULTRATIGHT") {
+                hasUtTop10 = true;
+                if (rec.rank === 1) {
+                    hasUtTop1 = true;
+                }
+            }
+
+            const crown = rec.rank === 1 ? '👑 ' : '';
+            recordsHtml += `<li><strong>${crown}${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
+        });
+
+        // 総合順位バッジの判定
+        const { rankedPlayers } = getPlayerStats();
+        const foundPlayerRank = rankedPlayers.find(p => p.player === playerName);
+        let overallBadgeHtml = '';
+
+        if (foundPlayerRank) {
+            const r = foundPlayerRank.rank;
+            if (r >= 1 && r <= 3) {
+                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP${r}</span>`;
+            } else if (r >= 4 && r <= 5) {
+                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP5</span>`;
+            } else if (r >= 6 && r <= 10) {
+                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP10</span>`;
+            }
+        }
+
+        // 追加バッジのHTML組み立て
+        let badgesHtml = '';
+        if (hasUtTop1) badgesHtml += `<span class="p-badge p-badge-ut-top1">🔥 Ultra Tight TOP1</span>`;
+        if (hasUtTop10) badgesHtml += `<span class="p-badge p-badge-ut-top10">🔥 Ultra Tight TOP10</span>`;
+        if (hasAnyWr) badgesHtml += `<span class="p-badge p-badge-top1">👑 TOP1</span>`;
+        badgesHtml += overallBadgeHtml;
+
+        const modalBody = document.getElementById('modal-body');
+        modalBody.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="https://mc-heads.net/avatar/${playerName}/64" style="width: 54px; height: 54px; border-radius: 8px; background:#111;" alt="${playerName}">
+                <div>
+                    <h2 style="margin: 0; color: var(--accent-color);">${playerName}</h2>
+                    <p style="margin: 5px 0 0 0; color: var(--text-sub);">総合ポイント: <strong>${totalPts.toLocaleString()} pt</strong></p>
+                </div>
+            </div>
+            <div class="profile-badges" style="margin-bottom: 18px;">
+                ${badgesHtml || '<span style="color:var(--text-sub); font-size:0.8rem;">獲得バッジはありません</span>'}
+            </div>
+            <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">記録一覧</h3>
+            <ul style="padding-left: 20px; line-height: 1.8; max-height: 180px; overflow-y: auto;">
+                ${recordsHtml || '<li style="color:var(--text-sub);">記録がありません</li>'}
+            </ul>
+        `;
+
+        document.getElementById('player-modal').style.display = 'flex';
+    }
+
+    function closeModalDirect() {
+        document.getElementById('player-modal').style.display = 'none';
+    }
+
+    initApp();
+</script>
+
+</body>
+</html>
