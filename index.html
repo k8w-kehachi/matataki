@@ -243,9 +243,8 @@
             border: 1px solid var(--border-color);
             background: rgba(255,255,255,0.05);
         }
-        .p-badge-ut-top1 { background: rgba(255, 45, 85, 0.2); color: #ff3b30; border-color: #ff3b30; }
-        .p-badge-ut-top10 { background: rgba(255, 149, 0, 0.2); color: #ff9500; border-color: #ff9500; }
         .p-badge-top1 { background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: #ffd700; }
+        .p-badge-master { background: rgba(186, 85, 211, 0.2); color: #da70d6; border-color: #da70d6; }
         .p-badge-overall { background: rgba(0, 255, 204, 0.15); color: var(--accent-color); border-color: var(--accent-color); }
 
         /* コース詳細ヘッダー */
@@ -625,10 +624,8 @@
             }
         });
 
-        // ポイント順にソート
         const sortedArray = Object.entries(playerScores).sort((a, b) => b[1] - a[1]);
         
-        // 正確な同率順位の計算（ゴルフ方式：同スコアなら同じ順位）
         const rankedPlayers = [];
         let currentRank = 1;
         for (let i = 0; i < sortedArray.length; i++) {
@@ -698,7 +695,6 @@
             return;
         }
 
-        // 1位獲得数の同率順位計算
         let currentRank = 1;
         sortedWr.forEach(([player, count], index) => {
             if (index > 0 && count < sortedWr[index - 1][1]) {
@@ -781,13 +777,11 @@
         });
     }
 
-    // コース選択 ＆ 自動スクロール
     function selectCourseAndScroll(courseName) {
         currentSelectedCourse = courseName;
         renderCourseGrid();
         renderCourseDetail(courseName);
 
-        // 詳細テーブルの位置へスムーズにスクロール
         const detailCard = document.getElementById('course-detail-card');
         detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -844,12 +838,11 @@
         });
     }
 
-function openPlayerModal(playerName) {
+    function openPlayerModal(playerName) {
         const playerRecords = recordsData.filter(rec => rec.player === playerName);
         let totalPts = 0;
         let recordsHtml = '';
 
-        // プレイヤーのプロフィールバッジ条件判定用
         let hasAnyWr = false;
 
         playerRecords.forEach(rec => {
@@ -862,7 +855,6 @@ function openPlayerModal(playerName) {
             recordsHtml += `<li><strong>${crown}${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
         });
 
-        // 総合順位・条件バッジの判定
         const { rankedPlayers } = getPlayerStats();
         const foundPlayerRank = rankedPlayers.find(p => p.player === playerName);
         let overallBadgeHtml = '';
@@ -878,10 +870,10 @@ function openPlayerModal(playerName) {
             }
         }
 
-        // 追加バッジのHTML組み立て（Ultra Tight関連を削除、1000pt以上のマスタバッジを追加）
+        // バッジの組み立て（Ultra Tightバッジ削除、matataki Master追加、TOP1、総合順位バッジ）
         let badgesHtml = '';
         if (hasAnyWr) badgesHtml += `<span class="p-badge p-badge-top1">👑 TOP1</span>`;
-        if (totalPts >= 1000) badgesHtml += `<span class="p-badge p-badge-ut-top1" style="background: rgba(186, 85, 211, 0.2); color: #da70d6; border-color: #da70d6;">✨ matataki Master</span>`;
+        if (totalPts >= 1000) badgesHtml += `<span class="p-badge p-badge-master">✨ matataki Master</span>`;
         badgesHtml += overallBadgeHtml;
 
         const modalBody = document.getElementById('modal-body');
@@ -904,6 +896,17 @@ function openPlayerModal(playerName) {
 
         document.getElementById('player-modal').style.display = 'flex';
     }
+
+    function closeModalDirect() {
+        document.getElementById('player-modal').style.display = 'none';
+    }
+
+    // モーダルを閉じる安全装置（ESCキー対応）
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModalDirect();
+        }
+    });
 
     initApp();
 </script>
