@@ -14,6 +14,9 @@
             --text-main: #ffffff;
             --text-sub: #9499b0;
             --border-color: #262a3d;
+            --win-color: #2ed573;
+            --lose-color: #ff4757;
+            --tie-color: #ffa502;
         }
         * {
             box-sizing: border-box;
@@ -29,12 +32,12 @@
             scroll-behavior: smooth;
         }
         .container {
-            max-width: 1050px;
+            max-width: 1120px;
             margin: 0 auto;
         }
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             padding-top: 10px;
         }
         header h1 {
@@ -53,14 +56,14 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
             flex-wrap: wrap;
         }
         .tab-btn {
             background-color: var(--card-bg);
             color: var(--text-sub);
             border: 1px solid var(--border-color);
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
@@ -212,7 +215,7 @@
         }
         .badge-ultratight { background-color: rgba(255, 45, 85, 0.2); color: #ff3b30; border: 1px solid #ff3b30; }
         .badge-tight { background-color: rgba(255, 149, 0, 0.2); color: #ff9500; border: 1px solid #ff9500; }
-        .badge-competitive { background-color: rgba(88, 86, 214, 0.2); color: #5856d6; border: 1px solid #5856d6; }
+        .badge-competitive { background-color: rgba(88, 86, 214, 0.2); color: #8c8aff; border: 1px solid #5856d6; }
         .badge-open { background-color: rgba(46, 213, 115, 0.2); color: #7bed9f; border: 1px solid #2ed573; }
         
         .wr-badge {
@@ -236,18 +239,20 @@
             margin-top: 10px;
         }
         .p-badge {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: bold;
-            padding: 3px 8px;
+            padding: 4px 9px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             background: rgba(255,255,255,0.05);
         }
-        .p-badge-top1 { background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: #ffd700; }
-        .p-badge-master { background: rgba(186, 85, 211, 0.2); color: #da70d6; border-color: #da70d6; }
-        .p-badge-overall { background: rgba(0, 255, 204, 0.15); color: var(--accent-color); border-color: var(--accent-color); }
+        .p-badge-wr { background: rgba(255, 215, 0, 0.2); color: #ffd700; border-color: #ffd700; }
+        .p-badge-pt { background: rgba(0, 255, 204, 0.15); color: var(--accent-color); border-color: var(--accent-color); }
+        .p-badge-course { background: rgba(72, 219, 251, 0.18); color: #48dbfb; border-color: #48dbfb; }
+        .p-badge-master { background: linear-gradient(90deg, rgba(255, 71, 87, 0.25), rgba(186, 85, 211, 0.25)); color: #ff9ff3; border-color: #ff9ff3; }
+        .p-badge-overall { background: rgba(255, 165, 2, 0.18); color: #ffc048; border-color: #ffa502; }
 
-        /* コース詳細ヘッダー */
+        /* コース詳細ヘッダー & 動画・攻略エリア */
         .course-detail-header {
             display: flex;
             justify-content: space-between;
@@ -267,6 +272,69 @@
             margin: 0;
             font-size: 1.4rem;
             color: var(--accent-color);
+        }
+        .course-guide-box {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            gap: 12px;
+        }
+        .guide-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .guide-btn {
+            background-color: #10121b;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .guide-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        .guide-tip {
+            background-color: #10121b;
+            border-left: 3px solid var(--accent-color);
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .video-embed-wrap {
+            margin-top: 8px;
+            display: none;
+        }
+        .video-embed-wrap.active {
+            display: block;
+        }
+        .video-embed-box {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .video-embed-box iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         /* テーブル */
@@ -327,8 +395,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
+            min-width: 34px;
             height: 28px;
+            padding: 0 6px;
             border-radius: 6px;
             font-weight: bold;
             font-size: 0.85rem;
@@ -337,6 +406,99 @@
         .rank-2 { background-color: rgba(192, 192, 192, 0.2); color: #c0c0c0; border: 1px solid #c0c0c0; }
         .rank-3 { background-color: rgba(205, 127, 50, 0.2); color: #cd7f32; border: 1px solid #cd7f32; }
         .rank-other { color: var(--text-sub); padding-left: 6px; }
+
+        /* VS 対戦比較システム */
+        .vs-selector {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        @media (max-width: 640px) {
+            .vs-selector {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+        .vs-select {
+            width: 100%;
+            background-color: #10121b;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+        .vs-badge {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+        .vs-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        .vs-player-card {
+            background-color: #10121b;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .vs-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 62px auto 62px 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+        @media (max-width: 820px) {
+            .vs-row {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                background: #10121b;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                border: 1px solid var(--border-color);
+            }
+        }
+        .vs-course-name {
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .vs-center {
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+        }
+        .pips {
+            font-family: monospace;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            user-select: none;
+        }
+        .pips-right {
+            text-align: right;
+        }
+        .vs-rank-label {
+            font-weight: bold;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+        .vs-win { color: var(--win-color); }
+        .vs-lose { color: var(--lose-color); }
+        .vs-tie { color: var(--tie-color); }
+        .vs-none { color: var(--text-sub); opacity: 0.65; }
 
         #loading-msg {
             text-align: center;
@@ -361,7 +523,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 25px;
             position: relative;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
@@ -387,7 +549,9 @@
     <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('ranking', this)">総合ポイントランキング</button>
         <button class="tab-btn" onclick="switchTab('wr-ranking', this)">1位獲得数ランキング</button>
+        <button class="tab-btn" onclick="switchTab('top10-count-ranking', this)">TOP10掲載数ランキング</button>
         <button class="tab-btn" onclick="switchTab('courses', this)">コース一覧 & TOP10</button>
+        <button class="tab-btn" onclick="switchTab('vs-mode', this)">⚔️ VS 比較</button>
     </div>
 
     <div id="loading-msg">スプレッドシートからデータを読み込み中...</div>
@@ -396,7 +560,7 @@
     <div id="ranking" class="section active" style="display:none;">
         <div class="card">
             <h2 style="margin-top:0;">総合ポイントランキング</h2>
-            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">プレイヤー名をクリックすると詳細データが表示されます</p>
+            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">プレイヤー名をクリックするとプロフィールバッジや記録一覧が表示されます</p>
             <table>
                 <thead>
                     <tr>
@@ -429,6 +593,24 @@
         </div>
     </div>
 
+    <!-- TOP10掲載数ランキング画面 -->
+    <div id="top10-count-ranking" class="section" style="display:none;">
+        <div class="card">
+            <h2 style="margin-top:0;">TOP10掲載数ランキング</h2>
+            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">全コースのうち、何コースでTOP10にランクインしているかを表示します</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">順位</th>
+                        <th>プレイヤー名</th>
+                        <th style="text-align:right; padding-right:20px;">TOP10掲載数</th>
+                    </tr>
+                </thead>
+                <tbody id="top10-count-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- コース一覧 & TOP10画面 -->
     <div id="courses" class="section">
         <div class="card">
@@ -453,6 +635,7 @@
                 </div>
                 <div style="color: var(--text-sub); font-size: 0.85rem;" id="course-diff-info"></div>
             </div>
+
             <table>
                 <thead>
                     <tr>
@@ -464,6 +647,28 @@
                 </thead>
                 <tbody id="course-tbody"></tbody>
             </table>
+
+            <!-- 動画・攻略方法エリア -->
+            <div class="course-guide-box" id="course-guide-box"></div>
+        </div>
+    </div>
+
+    <!-- VS 比較画面 -->
+    <div id="vs-mode" class="section" style="display:none;">
+        <div class="card">
+            <h2 style="margin-top:0;">⚔️ プレイヤー対戦比較</h2>
+            <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px;">
+                各コースの順位を10マスで表示します（1位＝10マス塗りつぶし）。相手より上位は<span style="color:var(--win-color); font-weight:bold;">緑</span>、下位は<span style="color:var(--lose-color); font-weight:bold;">赤</span>、同位は<span style="color:var(--tie-color); font-weight:bold;">黄</span>です。
+            </p>
+
+            <div class="vs-selector">
+                <select id="vs-player-a" class="vs-select" onchange="renderVsComparison()"></select>
+                <div class="vs-badge">VS</div>
+                <select id="vs-player-b" class="vs-select" onchange="renderVsComparison()"></select>
+            </div>
+
+            <div id="vs-summary" class="vs-summary"></div>
+            <div id="vs-course-list"></div>
         </div>
     </div>
 </div>
@@ -481,24 +686,53 @@
     // ★ ここにスプレッドシートの公開CSV URLを貼り付ける ★
     // ==========================================
     const RECORDS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZcUp7yh9oCsq6_lZNC9W5TiFiXax31s8rAfWVEAjZeg_fPHNwB3Q8Y2RYqlnqmX0R8kKnv2TLSNXV/pub?gid=0&single=true&output=csv";
-    const POINTS_CSV_URL  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZcUp7yh9oCsq6_lZNC9W5TiFiXax31s8rAfWVEAjZeg_fPHNwB3Q8Y2RYqlnqmX0R8kKnv2TLSNXV/pub?gid=1265643872&single=true&output=csv";
+    const POINTS_CSV_URL  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZcUp7yh9oCsq6_lZNC9W5TiFiXax31s8rAfWVEAjZeg_fPHNwB3Q8Y2RYqlnqmX0R8kKnv2TLSNXV/pub?gid=1265643872&single=true&output=csv
+";
+    const COURSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZcUp7yh9oCsq6_lZNC9W5TiFiXax31s8rAfWVEAjZeg_fPHNwB3Q8Y2RYqlnqmX0R8kKnv2TLSNXV/pub?gid=2038896091&single=true&output=csv"; // 任意：course,tip,wr_video,top10_video 列のあるCSV URL
 
     let pointsMap = {};
     let recordsData = [];
-    let courseMetaList = []; 
+    let courseGuideMap = {}; // course -> { tip, wrVideo, top10Video }
+    let courseMetaList = [];
     let currentSelectedCourse = "";
     let currentFilter = "ALL";
 
+    // カンマ区切りCSVパーサー（引用符""にも対応）
     function parseCSV(csvText) {
         const lines = csvText.trim().split(/\r?\n/);
-        const headers = lines[0].split(',').map(h => h.trim());
+        if (lines.length < 2) return [];
+        const splitLine = (line) => {
+            const cols = [];
+            let cur = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        cur += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === ',' && !inQuotes) {
+                    cols.push(cur.trim());
+                    cur = '';
+                } else {
+                    cur += ch;
+                }
+            }
+            cols.push(cur.trim());
+            return cols;
+        };
+
+        const headers = splitLine(lines[0]);
         const result = [];
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i].trim()) continue;
-            const values = lines[i].split(',').map(v => v.trim());
+            const values = splitLine(lines[i]);
             const obj = {};
             headers.forEach((h, idx) => {
-                obj[h] = values[idx];
+                obj[h] = values[idx] ?? '';
             });
             result.push(obj);
         }
@@ -507,13 +741,15 @@
 
     async function initApp() {
         try {
-            const [recRes, ptsRes] = await Promise.all([
-                fetch(RECORDS_CSV_URL),
-                fetch(POINTS_CSV_URL)
-            ]);
+            const requests = [
+                fetch(RECORDS_CSV_URL).then(r => r.text()),
+                fetch(POINTS_CSV_URL).then(r => r.text())
+            ];
+            if (COURSES_CSV_URL && COURSES_CSV_URL.trim() !== "") {
+                requests.push(fetch(COURSES_CSV_URL).then(r => r.text()).catch(() => ""));
+            }
 
-            const recText = await recRes.text();
-            const ptsText = await ptsRes.text();
+            const [recText, ptsText, crsText = ""] = await Promise.all(requests);
 
             const rawPoints = parseCSV(ptsText);
             rawPoints.forEach(row => {
@@ -535,6 +771,18 @@
                 };
             }).filter(r => r.course && !isNaN(r.rank) && r.player && r.time > 0);
 
+            if (crsText.trim()) {
+                const rawCourses = parseCSV(crsText);
+                rawCourses.forEach(row => {
+                    if (!row.course) return;
+                    courseGuideMap[row.course.trim()] = {
+                        tip: row.tip || '',
+                        wrVideo: row.wr_video || '',
+                        top10Video: row.top10_video || ''
+                    };
+                });
+            }
+
             buildCourseMeta();
 
             if (courseMetaList.length > 0) {
@@ -545,8 +793,10 @@
             document.getElementById('ranking').style.display = 'block';
             renderOverallRanking();
             renderWrRanking();
+            renderTop10CountRanking();
             renderCourseGrid();
             renderCourseDetail(currentSelectedCourse);
+            initVsSelectors();
 
         } catch (err) {
             document.getElementById('loading-msg').innerHTML = 
@@ -608,15 +858,20 @@
         btnEl.classList.add('active');
     }
 
-    // プレイヤーごとの集計・同率対応付きランキング計算
     function getPlayerStats() {
         const playerScores = {};
         const playerWrCounts = {};
+        const playerTop10Counts = {};
 
         recordsData.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
             if (!playerScores[rec.player]) playerScores[rec.player] = 0;
             playerScores[rec.player] += pts;
+
+            if (!playerTop10Counts[rec.player]) playerTop10Counts[rec.player] = 0;
+            if (rec.rank >= 1 && rec.rank <= 10) {
+                playerTop10Counts[rec.player] += 1;
+            }
 
             if (rec.rank === 1) {
                 if (!playerWrCounts[rec.player]) playerWrCounts[rec.player] = 0;
@@ -639,7 +894,14 @@
             });
         }
 
-        return { rankedPlayers, playerWrCounts };
+        return { rankedPlayers, playerWrCounts, playerTop10Counts };
+    }
+
+    function getRankVisual(rank) {
+        if (rank === 1) return { rowClass: 'podium-1', badgeClass: 'rank-1', label: '👑 1' };
+        if (rank === 2) return { rowClass: 'podium-2', badgeClass: 'rank-2', label: '🥈 2' };
+        if (rank === 3) return { rowClass: 'podium-3', badgeClass: 'rank-3', label: '🥉 3' };
+        return { rowClass: '', badgeClass: 'rank-other', label: `${rank}` };
     }
 
     function renderOverallRanking() {
@@ -648,29 +910,15 @@
         tbody.innerHTML = '';
 
         rankedPlayers.forEach(item => {
-            const rank = item.rank;
-            const player = item.player;
-            const score = item.score;
-
-            let rowClass = '';
-            let badgeClass = 'rank-other';
-            let rankDisplay = `${rank}`;
-
-            if (rank === 1) {
-                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1';
-            } else if (rank === 2) {
-                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2';
-            } else if (rank === 3) {
-                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3';
-            }
-
+            const { rank, player, score } = item;
+            const vis = getRankVisual(rank);
             const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
             const wrCount = playerWrCounts[player] || 0;
             const wrBadgeHtml = wrCount > 0 ? `<span class="wr-badge">👑 ${wrCount}回</span>` : `<span style="color:var(--text-sub); font-size:0.8rem;">-</span>`;
 
             tbody.innerHTML += `
-                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${player}')">
-                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
+                <tr class="player-row ${vis.rowClass}" onclick="openPlayerModal('${player}')">
+                    <td><span class="rank-badge-box ${vis.badgeClass}">${vis.label}</span></td>
                     <td>
                         <div class="player-info">
                             <img src="${avatarUrl}" class="mc-avatar" alt="${player}">
@@ -700,24 +948,12 @@
             if (index > 0 && count < sortedWr[index - 1][1]) {
                 currentRank = index + 1;
             }
-
-            let rowClass = '';
-            let badgeClass = 'rank-other';
-            let rankDisplay = `${currentRank}`;
-
-            if (currentRank === 1) {
-                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1';
-            } else if (currentRank === 2) {
-                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2';
-            } else if (currentRank === 3) {
-                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3';
-            }
-
+            const vis = getRankVisual(currentRank);
             const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
 
             tbody.innerHTML += `
-                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${player}')">
-                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
+                <tr class="player-row ${vis.rowClass}" onclick="openPlayerModal('${player}')">
+                    <td><span class="rank-badge-box ${vis.badgeClass}">${vis.label}</span></td>
                     <td>
                         <div class="player-info">
                             <img src="${avatarUrl}" class="mc-avatar" alt="${player}">
@@ -725,6 +961,41 @@
                         </div>
                     </td>
                     <td style="text-align:right; padding-right:20px; font-weight:bold; color:#ffd700; font-size:1.05rem;">👑 ${count} 回</td>
+                </tr>
+            `;
+        });
+    }
+
+    function renderTop10CountRanking() {
+        const { playerTop10Counts } = getPlayerStats();
+        const totalCourses = courseMetaList.length;
+        const tbody = document.getElementById('top10-count-tbody');
+        tbody.innerHTML = '';
+
+        const sortedList = Object.entries(playerTop10Counts).sort((a, b) => b[1] - a[1]);
+        if (sortedList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-sub);">データがありません</td></tr>`;
+            return;
+        }
+
+        let currentRank = 1;
+        sortedList.forEach(([player, count], index) => {
+            if (index > 0 && count < sortedList[index - 1][1]) {
+                currentRank = index + 1;
+            }
+            const vis = getRankVisual(currentRank);
+            const avatarUrl = `https://mc-heads.net/avatar/${player}/30`;
+
+            tbody.innerHTML += `
+                <tr class="player-row ${vis.rowClass}" onclick="openPlayerModal('${player}')">
+                    <td><span class="rank-badge-box ${vis.badgeClass}">${vis.label}</span></td>
+                    <td>
+                        <div class="player-info">
+                            <img src="${avatarUrl}" class="mc-avatar" alt="${player}">
+                            <strong>${player}</strong>
+                        </div>
+                    </td>
+                    <td style="text-align:right; padding-right:20px; font-weight:bold; color:#48dbfb; font-size:1.05rem;">${count} / ${totalCourses}</td>
                 </tr>
             `;
         });
@@ -786,14 +1057,33 @@
         detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function toYoutubeEmbedUrl(url) {
+        if (!url) return null;
+        try {
+            const u = new URL(url);
+            if (u.hostname.includes('youtu.be')) {
+                const id = u.pathname.replace('/', '');
+                return id ? `https://www.youtube.com/embed/${id}` : null;
+            }
+            if (u.hostname.includes('youtube.com')) {
+                const v = u.searchParams.get('v');
+                if (v) return `https://www.youtube.com/embed/${v}`;
+                if (u.pathname.startsWith('/embed/')) return url;
+            }
+        } catch (e) {}
+        return null;
+    }
+
     function renderCourseDetail(courseName) {
         const meta = courseMetaList.find(c => c.name === courseName);
         const titleEl = document.getElementById('selected-course-name');
         const badgeContainer = document.getElementById('difficulty-badge-container');
         const diffInfoEl = document.getElementById('course-diff-info');
         const tbody = document.getElementById('course-tbody');
+        const guideBox = document.getElementById('course-guide-box');
 
         tbody.innerHTML = '';
+        guideBox.innerHTML = '';
 
         if (!meta) {
             titleEl.textContent = "コースデータなし";
@@ -808,23 +1098,12 @@
 
         meta.records.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
-            let rowClass = '';
-            let badgeClass = 'rank-other';
-            let rankDisplay = `${rec.rank}位`;
-
-            if (rec.rank === 1) {
-                rowClass = 'podium-1'; badgeClass = 'rank-1'; rankDisplay = '👑 1位';
-            } else if (rec.rank === 2) {
-                rowClass = 'podium-2'; badgeClass = 'rank-2'; rankDisplay = '🥈 2位';
-            } else if (rec.rank === 3) {
-                rowClass = 'podium-3'; badgeClass = 'rank-3'; rankDisplay = '🥉 3位';
-            }
-
+            const vis = getRankVisual(rec.rank);
             const avatarUrl = `https://mc-heads.net/avatar/${rec.player}/30`;
 
             tbody.innerHTML += `
-                <tr class="player-row ${rowClass}" onclick="openPlayerModal('${rec.player}')">
-                    <td><span class="rank-badge-box ${badgeClass}">${rankDisplay}</span></td>
+                <tr class="player-row ${vis.rowClass}" onclick="openPlayerModal('${rec.player}')">
+                    <td><span class="rank-badge-box ${vis.badgeClass}">${rec.rank}位</span></td>
                     <td>
                         <div class="player-info">
                             <img src="${avatarUrl}" class="mc-avatar" alt="${rec.player}">
@@ -836,20 +1115,70 @@
                 </tr>
             `;
         });
+
+        const guide = courseGuideMap[meta.name] || { tip: '', wrVideo: '', top10Video: '' };
+        const wrEmbed = toYoutubeEmbedUrl(guide.wrVideo);
+        const top10Embed = toYoutubeEmbedUrl(guide.top10Video);
+
+        let linksHtml = '';
+        if (guide.wrVideo) {
+            linksHtml += `<a class="guide-btn" href="${guide.wrVideo}" target="_blank" rel="noopener">👑 1位を目指す方へ: link</a>`;
+            if (wrEmbed) {
+                linksHtml += `<button class="guide-btn" onclick="toggleEmbed('wr-embed-box', '${wrEmbed}')">▶ その場で再生（1位向け）</button>`;
+            }
+        } else {
+            linksHtml += `<span style="color:var(--text-sub); font-size:0.82rem;">1位を目指す方へ: 未登録</span>`;
+        }
+
+        if (guide.top10Video) {
+            linksHtml += `<a class="guide-btn" href="${guide.top10Video}" target="_blank" rel="noopener">🏅 10位を目指す方へ: link</a>`;
+            if (top10Embed) {
+                linksHtml += `<button class="guide-btn" onclick="toggleEmbed('top10-embed-box', '${top10Embed}')">▶ その場で再生（10位向け）</button>`;
+            }
+        } else {
+            linksHtml += `<span style="color:var(--text-sub); font-size:0.82rem;">10位を目指す方へ: 未登録</span>`;
+        }
+
+        const tipText = guide.tip ? guide.tip : "攻略方法はまだ登録されていません。";
+
+        guideBox.innerHTML = `
+            <div class="guide-links">${linksHtml}</div>
+            <div id="wr-embed-box" class="video-embed-wrap"></div>
+            <div id="top10-embed-box" class="video-embed-wrap"></div>
+            <div class="guide-tip"><strong>攻略方法:</strong> ${tipText}</div>
+        `;
+    }
+
+    function toggleEmbed(targetId, embedUrl) {
+        const wrap = document.getElementById(targetId);
+        if (!wrap) return;
+        const isOpen = wrap.classList.contains('active');
+        document.querySelectorAll('.video-embed-wrap').forEach(el => {
+            el.classList.remove('active');
+            el.innerHTML = '';
+        });
+        if (!isOpen) {
+            wrap.classList.add('active');
+            wrap.innerHTML = `
+                <div class="video-embed-box">
+                    <iframe src="${embedUrl}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                </div>
+            `;
+        }
     }
 
     function openPlayerModal(playerName) {
         const playerRecords = recordsData.filter(rec => rec.player === playerName);
         let totalPts = 0;
         let recordsHtml = '';
-
         let hasAnyWr = false;
+        let top10Count = 0;
 
         playerRecords.forEach(rec => {
             const pts = pointsMap[rec.rank] || 0;
             totalPts += pts;
-
             if (rec.rank === 1) hasAnyWr = true;
+            if (rec.rank >= 1 && rec.rank <= 10) top10Count += 1;
 
             const crown = rec.rank === 1 ? '👑 ' : '';
             recordsHtml += `<li><strong>${crown}${rec.course}</strong> : ${rec.rank}位 (${rec.time.toFixed(3)}秒) → +${pts}pt</li>`;
@@ -857,24 +1186,47 @@
 
         const { rankedPlayers } = getPlayerStats();
         const foundPlayerRank = rankedPlayers.find(p => p.player === playerName);
-        let overallBadgeHtml = '';
+        const totalCourses = courseMetaList.length;
 
+        const badges = [];
+
+        // 1. WR holder
+        if (hasAnyWr) {
+            badges.push(`<span class="p-badge p-badge-wr">👑 WR holder</span>`);
+        }
+
+        // 2. ポイント系（上位のみ：1000以上なら over1000pt のみ、500以上1000未満なら over500pt）
+        if (totalPts >= 1000) {
+            badges.push(`<span class="p-badge p-badge-pt">⚡ over1000pt</span>`);
+        } else if (totalPts >= 500) {
+            badges.push(`<span class="p-badge p-badge-pt">⚡ over500pt</span>`);
+        }
+
+        // 3. TOP10掲載数系（上位のみ：30以上 / 20以上 / 10以上）
+        if (top10Count >= 30) {
+            badges.push(`<span class="p-badge p-badge-course">🏅 over30course</span>`);
+        } else if (top10Count >= 20) {
+            badges.push(`<span class="p-badge p-badge-course">🏅 over20course</span>`);
+        } else if (top10Count >= 10) {
+            badges.push(`<span class="p-badge p-badge-course">🏅 over10course</span>`);
+        }
+
+        // 4. 全コースでTOP10掲載達成時：matataki master
+        if (totalCourses > 0 && top10Count >= totalCourses) {
+            badges.push(`<span class="p-badge p-badge-master">🌟 matataki master</span>`);
+        }
+
+        // 5. 総合順位系（上位のみ）
         if (foundPlayerRank) {
             const r = foundPlayerRank.rank;
             if (r >= 1 && r <= 3) {
-                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP${r}</span>`;
+                badges.push(`<span class="p-badge p-badge-overall">🏆 総合TOP${r}</span>`);
             } else if (r >= 4 && r <= 5) {
-                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP5</span>`;
+                badges.push(`<span class="p-badge p-badge-overall">🏆 総合TOP5</span>`);
             } else if (r >= 6 && r <= 10) {
-                overallBadgeHtml = `<span class="p-badge p-badge-overall">総合TOP10</span>`;
+                badges.push(`<span class="p-badge p-badge-overall">🏆 総合TOP10</span>`);
             }
         }
-
-        // バッジの組み立て（Ultra Tightバッジ削除、matataki Master追加、TOP1、総合順位バッジ）
-        let badgesHtml = '';
-        if (hasAnyWr) badgesHtml += `<span class="p-badge p-badge-top1">👑 TOP1</span>`;
-        if (totalPts >= 1000) badgesHtml += `<span class="p-badge p-badge-master">✨ matataki Master</span>`;
-        badgesHtml += overallBadgeHtml;
 
         const modalBody = document.getElementById('modal-body');
         modalBody.innerHTML = `
@@ -882,11 +1234,13 @@
                 <img src="https://mc-heads.net/avatar/${playerName}/64" style="width: 54px; height: 54px; border-radius: 8px; background:#111;" alt="${playerName}">
                 <div>
                     <h2 style="margin: 0; color: var(--accent-color);">${playerName}</h2>
-                    <p style="margin: 5px 0 0 0; color: var(--text-sub);">総合ポイント: <strong>${totalPts.toLocaleString()} pt</strong></p>
+                    <p style="margin: 5px 0 0 0; color: var(--text-sub);">
+                        総合ポイント: <strong>${totalPts.toLocaleString()} pt</strong> / TOP10掲載: <strong>${top10Count} / ${totalCourses}</strong>
+                    </p>
                 </div>
             </div>
             <div class="profile-badges" style="margin-bottom: 18px;">
-                ${badgesHtml || '<span style="color:var(--text-sub); font-size:0.8rem;">獲得バッジはありません</span>'}
+                ${badges.join('') || '<span style="color:var(--text-sub); font-size:0.8rem;">獲得バッジはありません</span>'}
             </div>
             <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">記録一覧</h3>
             <ul style="padding-left: 20px; line-height: 1.8; max-height: 180px; overflow-y: auto;">
@@ -901,12 +1255,145 @@
         document.getElementById('player-modal').style.display = 'none';
     }
 
-    // モーダルを閉じる安全装置（ESCキー対応）
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModalDirect();
         }
     });
+
+    // ==========================================
+    // VS 対戦比較システム
+    // ==========================================
+    function initVsSelectors() {
+        const { rankedPlayers } = getPlayerStats();
+        const players = rankedPlayers.map(p => p.player);
+        const selA = document.getElementById('vs-player-a');
+        const selB = document.getElementById('vs-player-b');
+
+        selA.innerHTML = '';
+        selB.innerHTML = '';
+
+        players.forEach(p => {
+            selA.innerHTML += `<option value="${p}">${p}</option>`;
+            selB.innerHTML += `<option value="${p}">${p}</option>`;
+        });
+
+        if (players.length >= 1) selA.value = players[0];
+        if (players.length >= 2) selB.value = players[1];
+
+        renderVsComparison();
+    }
+
+    // 順位(1〜10)を10マスゲージ文字列に変換（1位=10個■, 2位=9個■... 10位=1個■, 圏外=0個■）
+    function rankToPips(rank) {
+        if (!rank || rank < 1 || rank > 10) {
+            return '□□□□□□□□□□';
+        }
+        const filled = 11 - rank; // 1位 -> 10, 10位 -> 1
+        return '■'.repeat(filled) + '□'.repeat(10 - filled);
+    }
+
+    function renderVsComparison() {
+        const pA = document.getElementById('vs-player-a').value;
+        const pB = document.getElementById('vs-player-b').value;
+        const summaryEl = document.getElementById('vs-summary');
+        const listEl = document.getElementById('vs-course-list');
+
+        if (!pA || !pB) return;
+
+        const { rankedPlayers } = getPlayerStats();
+        const infoA = rankedPlayers.find(p => p.player === pA) || { rank: '-', score: 0 };
+        const infoB = rankedPlayers.find(p => p.player === pB) || { rank: '-', score: 0 };
+
+        let winA = 0;
+        let winB = 0;
+        let tieCount = 0;
+        let rowsHtml = '';
+
+        courseMetaList.forEach(meta => {
+            const recA = meta.records.find(r => r.player === pA);
+            const recB = meta.records.find(r => r.player === pB);
+            const rankA = recA ? recA.rank : null;
+            const rankB = recB ? recB.rank : null;
+
+            let colorClassA = 'vs-none';
+            let colorClassB = 'vs-none';
+            let vsMark = '-';
+
+            if (rankA && rankB) {
+                if (rankA < rankB) {
+                    // Aの方が上位（数字が小さい）
+                    colorClassA = 'vs-win';
+                    colorClassB = 'vs-lose';
+                    vsMark = '◀';
+                    winA++;
+                } else if (rankB < rankA) {
+                    colorClassA = 'vs-lose';
+                    colorClassB = 'vs-win';
+                    vsMark = '▶';
+                    winB++;
+                } else {
+                    colorClassA = 'vs-tie';
+                    colorClassB = 'vs-tie';
+                    vsMark = '=';
+                    tieCount++;
+                }
+            } else if (rankA && !rankB) {
+                colorClassA = 'vs-win';
+                colorClassB = 'vs-none';
+                vsMark = '◀';
+                winA++;
+            } else if (!rankA && rankB) {
+                colorClassA = 'vs-none';
+                colorClassB = 'vs-win';
+                vsMark = '▶';
+                winB++;
+            }
+
+            const labelA = rankA ? `${rankA}位` : '圏外';
+            const labelB = rankB ? `${rankB}位` : '圏外';
+
+            rowsHtml += `
+                <div class="vs-row">
+                    <div class="vs-course-name">${meta.name}</div>
+                    <div class="pips pips-right ${colorClassA}">${rankToPips(rankA)}</div>
+                    <div class="vs-rank-label ${colorClassA}">${labelA}</div>
+                    <div class="vs-center">${vsMark}</div>
+                    <div class="vs-rank-label ${colorClassB}">${labelB}</div>
+                    <div class="pips ${colorClassB}">${rankToPips(rankB)}</div>
+                </div>
+            `;
+        });
+
+        summaryEl.innerHTML = `
+            <div class="vs-player-card">
+                <img src="https://mc-heads.net/avatar/${pA}/48" class="mc-avatar" style="width:48px; height:48px;" alt="${pA}">
+                <div>
+                    <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-color);">${pA}</div>
+                    <div style="font-size:0.85rem; color:var(--text-sub); margin-top:3px;">
+                        総合順位: <strong>${infoA.rank}位</strong>（${infoA.score.toLocaleString()} pt）
+                    </div>
+                    <div style="font-size:0.82rem; color:var(--win-color); font-weight:bold; margin-top:2px;">
+                        コース勝利数: ${winA} 勝
+                    </div>
+                </div>
+            </div>
+            <div class="vs-player-card" style="justify-content:flex-end; text-align:right;">
+                <div>
+                    <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-color);">${pB}</div>
+                    <div style="font-size:0.85rem; color:var(--text-sub); margin-top:3px;">
+                        総合順位: <strong>${infoB.rank}位</strong>（${infoB.score.toLocaleString()} pt）
+                    </div>
+                    <div style="font-size:0.82rem; color:var(--win-color); font-weight:bold; margin-top:2px;">
+                        コース勝利数: ${winB} 勝（同位 ${tieCount}）
+                    </div>
+                </div>
+                <img src="https://mc-heads.net/avatar/${pB}/48" class="mc-avatar" style="width:48px; height:48px;" alt="${pB}">
+            </div>
+        `;
+
+        listEl.innerHTML = rowsHtml || '<p style="color:var(--text-sub);">コースデータがありません</p>';
+    }
 
     initApp();
 </script>
